@@ -42,6 +42,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
+                      key: const Key('add_habit_main'), // Add key for test
                       icon: const Icon(
                         Icons.add,
                         color: AppTheme.backgroundDark,

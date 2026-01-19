@@ -115,6 +115,7 @@ class _ExerciseCategoryView extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       itemCount: exercises.length + 1, // +1 for Add Exercise button
       itemBuilder: (context, index) {
+        // Remove sample exercise card
         if (index == exercises.length) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -138,7 +139,6 @@ class _ExerciseCategoryView extends StatelessWidget {
             ),
           );
         }
-
         return _ExerciseCard(exerciseName: exercises[index]);
       },
     );

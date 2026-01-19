@@ -42,7 +42,7 @@ dependencies:
   provider: ^6.1.1
   
   # Charts for statistics
-  fl_chart: ^0.66.0
+  fl_chart: ^1.1.1
   
   # Date formatting
   intl: ^0.20.2
@@ -51,7 +51,7 @@ dependencies:
   shared_preferences: ^2.2.2
   
   # Google Fonts for typography
-  google_fonts: ^6.1.0
+  google_fonts: ^7.0.2
   device_preview: ^1.2.0
 
 dev_dependencies:

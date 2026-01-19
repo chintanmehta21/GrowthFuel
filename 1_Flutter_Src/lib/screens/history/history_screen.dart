@@ -401,10 +401,8 @@ class _WeeklyViewState extends State<_WeeklyView> {
         Padding(
           padding: const EdgeInsets.all(16),
           child: Text(
-            'Week of Oct 15 - Oct 21',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(color: AppTheme.textMuted),
+            'Oct 15 - Oct 21', // Only week dates, no 'Week of'
+            style: Theme.of(context).textTheme.titleLarge, // Match Daily/Monthly view style
           ),
         ),
 
@@ -452,123 +450,183 @@ class _WeeklyDayCard extends StatelessWidget {
     final bool isRestDay = status == 'Rest Day';
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        children: [
-          // Date Header
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                margin: const EdgeInsets.only(bottom: 8),
-                decoration: BoxDecoration(
-                  color: AppTheme.surfaceLight,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '$day\n$date',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppTheme.accent,
-                    fontWeight: FontWeight.bold,
+      margin: const EdgeInsets.only(bottom: 12), // Make compact
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Left Timeline
+            SizedBox(
+              width: 60,
+              child: Column(
+                children: [
+                  // Day and Date
+                  Text(
+                    day,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppTheme.textMuted,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ),
-            ],
-          ),
-
-          // Workout Card
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppTheme.surfaceDark,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isRestDay ? AppTheme.textMuted : AppTheme.accent,
-                width: 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: isRestDay
-                            ? AppTheme.textMuted.withValues(alpha: 0.2)
-                            : AppTheme.accent.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        isRestDay ? Icons.spa : Icons.fitness_center,
-                        color: isRestDay ? AppTheme.textMuted : AppTheme.accent,
-                        size: 20,
-                      ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '$date',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            workout,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          if (duration.isNotEmpty)
-                            Text(
-                              '$duration • $status',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(color: AppTheme.accent),
-                            ),
-                        ],
-                      ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Dot indicator
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: AppTheme.accent,
+                      shape: BoxShape.circle,
                     ),
-                    if (!isRestDay)
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: AppTheme.accent,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check,
-                          color: AppTheme.backgroundDark,
-                          size: 16,
-                        ),
-                      ),
-                  ],
-                ),
-
-                // Habits
-                if (habits.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: habits.map((habit) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppTheme.surfaceLight,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          habit,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      );
-                    }).toList(),
+                  ),
+                  // Vertical line
+                  Expanded(
+                    child: Container(
+                      width: 2,
+                      color: AppTheme.surfaceLight,
+                    ),
                   ),
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+
+            // Right Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 28),
+                  // Workout Card
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surfaceDark,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isRestDay ? AppTheme.textMuted : AppTheme.accent,
+                        width: 1.5,
+                        style: isRestDay ? BorderStyle.solid : BorderStyle.solid,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: isRestDay
+                                ? AppTheme.textMuted.withValues(alpha: 0.2)
+                                : AppTheme.accent.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            isRestDay ? Icons.spa : Icons.fitness_center,
+                            color: isRestDay ? AppTheme.textMuted : AppTheme.accent,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                workout,
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              if (duration.isNotEmpty) ...[
+                                const SizedBox(height: 4),
+                                Text(
+                                  duration, // Remove 'Completed'
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(color: AppTheme.accent),
+                                ),
+                              ] else if (isRestDay) ...[
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Rest Day',
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(color: AppTheme.textMuted),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        if (!isRestDay)
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              color: AppTheme.accent,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.check,
+                              color: AppTheme.backgroundDark,
+                              size: 20,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+
+                  // Habits
+                  if (habits.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: habits.map((habit) {
+                        // Extract icon and text from habit string
+                        final parts = habit.split(' ');
+                        final icon = parts.isNotEmpty ? parts[0] : '';
+                        final text = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+                        
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppTheme.surfaceDark,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: AppTheme.surfaceLight,
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                icon,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              if (text.isNotEmpty) ...[
+                                const SizedBox(width: 6),
+                                Text(
+                                  text,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -708,34 +766,33 @@ class _CalendarGrid extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '$day',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (hasWorkout) ...[
-                        const SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 2,
+                      hasWorkout
+                        ? Container(
+                            width: 28,
+                            height: 28,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppTheme.accent,
+                                width: 2,
+                              ),
+                            ),
+                            child: Text(
+                              '$day',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.accent,
+                              ),
+                            ),
+                          )
+                        : Text(
+                            '$day',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          decoration: BoxDecoration(
-                            color: AppTheme.accent,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            workoutData[day]!,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: AppTheme.backgroundDark,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ),
-                      ],
                       if (habits.isNotEmpty) ...[
                         const SizedBox(height: 2),
                         Wrap(
