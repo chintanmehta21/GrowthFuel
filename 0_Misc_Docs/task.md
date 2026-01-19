@@ -16,10 +16,11 @@
 - [x] Configure database triggers for daily data uploads (stats auto-calculation)
 
 ## Authentication & Onboarding
-- [ ] Create login screen
+- [x] Create login screen
 - [ ] Create signup screen
-- [ ] Implement Supabase authentication flow
-- [ ] Create splash screen with app branding
+- [x] Implement Supabase authentication flow
+    - [x] Google Sign-In (OAuth2.0) integration
+- [x] Create splash screen with app branding
 
 ## Home Screen
 - [ ] Design home screen layout

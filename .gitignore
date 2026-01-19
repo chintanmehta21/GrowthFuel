@@ -1,0 +1,15 @@
+# Ignore Dart tool configuration
+.dart_tool/
+
+# Ignore Flutter build output
+build/
+
+# Ignore iOS and Android project files
+ios/
+android/
+
+# Ignore Dart package configuration
+.packages
+
+# Ignore Supabase environment variables
+0_Imp_docs/supabase_env.dart

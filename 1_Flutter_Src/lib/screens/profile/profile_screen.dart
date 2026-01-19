@@ -1,11 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:growth_fuel/config/theme.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) {
+      // Not logged in: Show Google login button
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundDark,
+        body: SafeArea(
+          child: Center(
+            child: ElevatedButton.icon(
+              icon: Icon(Icons.login, color: AppTheme.backgroundDark),
+              label: const Text('Login with Google'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.accent,
+                foregroundColor: AppTheme.backgroundDark,
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              ),
+              onPressed: () async {
+                await Supabase.instance.client.auth.signInWithOAuth(
+                  OAuthProvider.google,
+                );
+              },
+            ),
+          ),
+        ),
+      );
+    }
+    // Logged in: Show profile
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
@@ -24,13 +51,14 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Text('Chintan', style: Theme.of(context).textTheme.displaySmall),
+              Text(
+                user.userMetadata?['name'] ?? user.email ?? '',
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
               const SizedBox(height: 4),
               Text(
-                'chintan@example.com',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
+                user.email ?? '',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
               ),
               const SizedBox(height: 32),
 
@@ -93,8 +121,9 @@ class ProfileScreen extends StatelessWidget {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Logout
+                    onPressed: () async {
+                      await Supabase.instance.client.auth.signOut();
+                      Navigator.of(context).pushReplacementNamed('/login');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.accent,

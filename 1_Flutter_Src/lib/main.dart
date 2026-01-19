@@ -7,11 +7,17 @@ import 'package:growth_fuel/screens/history/history_screen.dart';
 import 'package:growth_fuel/screens/profile/profile_screen.dart';
 import 'package:growth_fuel/widgets/bottom_navigation.dart';
 import 'package:growth_fuel/utils/constants.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart'; // For kReleaseMode
 import 'package:device_preview/device_preview.dart';
+import '../../0_Imp_docs/supabase_env.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
+  );
   runApp(
     DevicePreview(enabled: !kReleaseMode, builder: (context) => const MyApp()),
   );
