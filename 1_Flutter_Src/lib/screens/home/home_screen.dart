@@ -3,6 +3,7 @@ import 'package:growth_fuel/config/theme.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../widgets/score_card.dart';
+import '../../widgets/section_with_dropdown.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -30,19 +31,6 @@ class HomeScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
                     ],
-                  ),
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppTheme.primary,
-                    ),
-                    child: const Icon(
-                      Icons.person,
-                      color: AppTheme.backgroundDark,
-                      size: 30,
-                    ),
                   ),
                 ],
               ),
@@ -74,38 +62,134 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-              // Workout Counts
-              Text(
-                'Workout Counts',
-                style: Theme.of(context).textTheme.titleLarge,
+              // Workout Counts Section with BarChart
+              SectionWithDropdown(
+                title: 'Workout Counts',
+                initialTimePeriod: 'Weekly',
+                onTimePeriodChanged: (value) {
+                  // Handle workout time period change
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2C2C2C),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: BarChart(
+                      BarChartData(
+                        alignment: BarChartAlignment.spaceAround,
+                        maxY: 10,
+                        barTouchData: BarTouchData(enabled: false),
+                        titlesData: FlTitlesData(
+                          show: true,
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (value, meta) {
+                                const titles = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                                return Text(
+                                  titles[value.toInt()],
+                                  style: const TextStyle(
+                                    color: Color(0xFFB0A090),
+                                    fontSize: 12,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        ),
+                        gridData: FlGridData(show: false),
+                        borderData: FlBorderData(show: false),
+                        barGroups: [
+                          BarChartGroupData(x: 0, barRods: [BarChartRodData(toY: 5, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
+                          BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 6, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
+                          BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 3, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
+                          BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 7, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
+                          BarChartGroupData(x: 4, barRods: [BarChartRodData(toY: 4, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
+                          BarChartGroupData(x: 5, barRods: [BarChartRodData(toY: 8, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
+                          BarChartGroupData(x: 6, barRods: [BarChartRodData(toY: 5, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Weekly', style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-              const SizedBox(height: 16),
-              _WorkoutCountsChart(),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
 
-              // Calories Burned
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Calories Burned',
-                    style: Theme.of(context).textTheme.titleLarge,
+              // Calories Burned Section with LineChart
+              SectionWithDropdown(
+                title: 'Calories Burned',
+                initialTimePeriod: 'Weekly',
+                onTimePeriodChanged: (value) {
+                  // Handle calories time period change
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2C2C2C),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: LineChart(
+                      LineChartData(
+                        gridData: FlGridData(show: false),
+                        titlesData: FlTitlesData(
+                          show: true,
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (value, meta) {
+                                const titles = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                                return Text(
+                                  titles[value.toInt()],
+                                  style: const TextStyle(
+                                    color: Color(0xFFB0A090),
+                                    fontSize: 12,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        ),
+                        borderData: FlBorderData(show: false),
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: const [
+                              FlSpot(0, 3),
+                              FlSpot(1, 4),
+                              FlSpot(2, 2),
+                              FlSpot(3, 5),
+                              FlSpot(4, 4),
+                              FlSpot(5, 6),
+                              FlSpot(6, 3),
+                            ],
+                            isCurved: true,
+                            color: const Color(0xFFD4C5A8),
+                            barWidth: 2,
+                            isStrokeCapRound: true,
+                            dotData: FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              color: const Color(0xFFD4C5A8).withOpacity(0.1),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  Text(
-                    'This Week',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
+                ),
               ),
-              const SizedBox(height: 16),
-              _CaloriesBurnedChart(),
               const SizedBox(height: 32),
 
               // Today's Plan
@@ -118,160 +202,6 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-// Workout Counts Chart
-class _WorkoutCountsChart extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceDark,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.spaceAround,
-          maxY: 6,
-          barTouchData: BarTouchData(enabled: false),
-          titlesData: FlTitlesData(
-            show: true,
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  const days = [
-                    'Mon',
-                    'Tue',
-                    'Wed',
-                    'Thu',
-                    'Fri',
-                    'Sat',
-                    'Sun',
-                  ];
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      days[value.toInt()],
-                      style: TextStyle(color: AppTheme.textMuted, fontSize: 10),
-                    ),
-                  );
-                },
-              ),
-            ),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          ),
-          gridData: FlGridData(show: false),
-          borderData: FlBorderData(show: false),
-          barGroups: [
-            _makeBarGroup(0, 2),
-            _makeBarGroup(1, 3),
-            _makeBarGroup(2, 1.5),
-            _makeBarGroup(3, 4),
-            _makeBarGroup(4, 3),
-            _makeBarGroup(5, 5),
-            _makeBarGroup(6, 2),
-          ],
-        ),
-      ),
-    );
-  }
-
-  BarChartGroupData _makeBarGroup(int x, double y) {
-    return BarChartGroupData(
-      x: x,
-      barRods: [
-        BarChartRodData(
-          toY: y,
-          color: AppTheme.primary,
-          width: 20,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-        ),
-      ],
-    );
-  }
-}
-
-// Calories Burned Chart
-class _CaloriesBurnedChart extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceDark,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: LineChart(
-        LineChartData(
-          gridData: FlGridData(show: false),
-          titlesData: FlTitlesData(
-            show: true,
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-                  if (value.toInt() >= 0 && value.toInt() < days.length) {
-                    return Text(
-                      days[value.toInt()],
-                      style: TextStyle(color: AppTheme.textMuted, fontSize: 10),
-                    );
-                  }
-                  return const Text('');
-                },
-              ),
-            ),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          ),
-          borderData: FlBorderData(show: false),
-          minX: 0,
-          maxX: 6,
-          minY: 0,
-          maxY: 500,
-          lineBarsData: [
-            LineChartBarData(
-              spots: [
-                const FlSpot(0, 200),
-                const FlSpot(1, 280),
-                const FlSpot(2, 250),
-                const FlSpot(3, 320),
-                const FlSpot(4, 220),
-                const FlSpot(5, 380),
-                const FlSpot(6, 280),
-              ],
-              isCurved: true,
-              color: AppTheme.primary.withValues(alpha: 0.8),
-              barWidth: 3,
-              isStrokeCapRound: true,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) {
-                  return FlDotCirclePainter(
-                    radius: 4,
-                    color: AppTheme.primary,
-                    strokeWidth: 2,
-                    strokeColor: AppTheme.backgroundDark,
-                  );
-                },
-              ),
-              belowBarData: BarAreaData(
-                show: true,
-                color: AppTheme.primary.withValues(alpha: 0.1),
-              ),
-            ),
-          ],
         ),
       ),
     );
