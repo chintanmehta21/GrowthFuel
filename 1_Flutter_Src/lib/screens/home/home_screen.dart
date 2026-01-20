@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:growth_fuel/config/theme.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../widgets/score_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -51,20 +52,22 @@ class HomeScreen extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _ScoreCard(
-                      title: 'Workout\nScore',
-                      score: 85,
+                    child: ScoreCard(
+                      title: 'Workout Score',
                       icon: Icons.fitness_center,
-                      color: AppTheme.accent,
+                      score: 85, // Replace with actual value
+                      iconColor: const Color(0xFFE85D04),
+                      tooltipText: 'How is it calculated?',
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _ScoreCard(
-                      title: 'Habit\nScore',
-                      score: 92,
+                    child: ScoreCard(
+                      title: 'Habit Score',
                       icon: Icons.check_circle,
-                      color: const Color(0xFF4A90E2),
+                      score: 92, // Replace with actual value
+                      iconColor: Colors.blue,
+                      tooltipText: 'How is it calculated?',
                     ),
                   ),
                 ],
@@ -116,82 +119,6 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-// Score Card Widget
-class _ScoreCard extends StatelessWidget {
-  final String title;
-  final int score;
-  final IconData icon;
-  final Color color;
-
-  const _ScoreCard({
-    required this.title,
-    required this.score,
-    required this.icon,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceDark,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, color: color, size: 19), // 1 size smaller
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.textMuted,
-                        height: 1.3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 0),
-                child: Text('$score', style: Theme.of(context).textTheme.displayMedium),
-              ),
-              const SizedBox(width: 4),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Text(
-                  'pts',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
