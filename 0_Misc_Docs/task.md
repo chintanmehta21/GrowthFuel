@@ -23,12 +23,12 @@
 - [x] Create splash screen with app branding
 
 ## Home Screen
-- [ ] Design home screen layout
-- [ ] Implement greeting message with user name
-- [ ] Create workout score card widget
-- [ ] Create habit score card widget
-- [ ] Implement weekly workout count display
-- [ ] Create calories burned graph/chart
+- [x] Design home screen layout
+- [x] Implement greeting message with user name
+- [x] Create workout score card widget
+- [x] Create habit score card widget
+- [x] Implement weekly workout count display
+- [x] Create calories burned graph/chart
 - [ ] Connect to Supabase for real-time stats
 
 ## Exercise Tab
@@ -73,9 +73,9 @@
 - [ ] Connect to user profile in Supabase
 
 ## Bottom Navigation
-- [ ] Create bottom navigation bar
-- [ ] Implement navigation between 5 main tabs
-- [ ] Style navigation with accent colors
+- [x] Create bottom navigation bar
+- [x] Implement navigation between 5 main tabs
+- [x] Style navigation with accent colors
 
 ## Database Integration & API
 - [ ] Create Supabase service layer
