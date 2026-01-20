@@ -1,11 +1,11 @@
 # GrowthFuel Flutter App Development
 
 ## Project Setup
-- [ ] User manual installation of Flutter SDK (In Progress)
-- [ ] Initialize Flutter project structure
-- [ ] Configure Supabase dependencies
-- [ ] Set up project structure (screens, widgets, services, models)
-- [ ] Configure app theme with specified color scheme
+- [x] User manual installation of Flutter SDK (Complete)
+- [x] Initialize Flutter project structure
+- [x] Configure Supabase dependencies
+- [x] Set up project structure (screens, widgets, services, models)
+- [x] Configure app theme with specified color scheme
 
 ## Supabase Configuration
 - [x] Set up Supabase project structure
@@ -17,7 +17,7 @@
 
 ## Authentication & Onboarding
 - [x] Create login screen
-- [ ] Create signup screen
+- [x] Create signup screen
 - [x] Implement Supabase authentication flow
     - [x] Google Sign-In (OAuth2.0) integration
 - [x] Create splash screen with app branding

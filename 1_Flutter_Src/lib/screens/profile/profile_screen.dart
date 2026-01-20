@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:growth_fuel/config/theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -25,6 +26,7 @@ class ProfileScreen extends StatelessWidget {
               onPressed: () async {
                 await Supabase.instance.client.auth.signInWithOAuth(
                   OAuthProvider.google,
+                  redirectTo: kIsWeb ? 'http://localhost:51652/' : null,
                 );
               },
             ),

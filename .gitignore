@@ -12,4 +12,7 @@ android/
 .packages
 
 # Ignore Supabase environment variables
-0_Imp_docs/supabase_env.dart
+lib/config/supabase_env.dart
+
+# Ignore sensitive files
+0_Imp_Docs/

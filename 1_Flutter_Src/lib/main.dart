@@ -10,7 +10,7 @@ import 'package:growth_fuel/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart'; // For kReleaseMode
 import 'package:device_preview/device_preview.dart';
-import '../../0_Imp_docs/supabase_env.dart';
+import 'package:growth_fuel/config/supabase_env.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
