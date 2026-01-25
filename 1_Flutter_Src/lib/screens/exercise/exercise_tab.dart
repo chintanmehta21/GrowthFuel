@@ -280,7 +280,7 @@ class _ExerciseTabContentState extends State<_ExerciseTabContent> {
                       backgroundColor: AppTheme.accent,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
-                        vertical: 6, // Reduced vertical padding
+                        vertical: 2, // Reduced vertical padding further
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -314,7 +314,7 @@ class _ExerciseTabContentState extends State<_ExerciseTabContent> {
                     // Smaller font
                     color: AppTheme.accent,
                     fontWeight: FontWeight.bold,
-                    fontSize: 20, // Slightly smaller than titleLarge default
+                    fontSize: 17, // Reduced font size further
                   ),
                 ),
               ),
@@ -492,7 +492,7 @@ class _ExerciseCardState extends State<_ExerciseCard> {
                   ),
                   const SizedBox(height: 12),
                   ..._sets.asMap().entries.map(
-                    (entry) => _SetRow(
+                    (entry) => _SetItem(
                       setNumber: entry.value['set']!,
                       previousWeight: entry.value['previous']!,
                       onDelete: () => _removeSet(entry.key),
@@ -536,12 +536,12 @@ class _ExerciseCardState extends State<_ExerciseCard> {
   }
 }
 
-class _SetRow extends StatelessWidget {
+class _SetItem extends StatelessWidget {
   final String setNumber;
   final String previousWeight;
   final VoidCallback onDelete;
 
-  const _SetRow({
+  const _SetItem({
     required this.setNumber,
     required this.previousWeight,
     required this.onDelete,

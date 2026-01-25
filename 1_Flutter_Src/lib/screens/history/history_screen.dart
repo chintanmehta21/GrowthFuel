@@ -346,11 +346,26 @@ class _WeeklyView extends StatefulWidget {
 }
 
 class _WeeklyViewState extends State<_WeeklyView> {
-  // Sample week data
-  final List<Map<String, dynamic>> _weekData = [
+  late DateTime _currentWeekStart;
+
+  @override
+  void initState() {
+    super.initState();
+    // Calculate start of current week (Monday)
+    final now = DateTime.now();
+    _currentWeekStart = now.subtract(Duration(days: now.weekday - 1));
+  }
+
+  void _changeWeek(int weeks) {
+    setState(() {
+      _currentWeekStart = _currentWeekStart.add(Duration(days: weeks * 7));
+    });
+  }
+
+  // Sample habit/workout data structure
+  final List<Map<String, dynamic>> _sampleWeekSchedule = [
     {
       'day': 'MON',
-      'date': 15,
       'workout': 'Push',
       'duration': '30 min',
       'status': 'Completed',
@@ -358,7 +373,6 @@ class _WeeklyViewState extends State<_WeeklyView> {
     },
     {
       'day': 'TUE',
-      'date': 16,
       'workout': 'Pull',
       'duration': '30 min',
       'status': 'Completed',
@@ -366,7 +380,6 @@ class _WeeklyViewState extends State<_WeeklyView> {
     },
     {
       'day': 'WED',
-      'date': 17,
       'workout': 'Active Recovery',
       'duration': '',
       'status': 'Rest Day',
@@ -374,7 +387,6 @@ class _WeeklyViewState extends State<_WeeklyView> {
     },
     {
       'day': 'THU',
-      'date': 18,
       'workout': 'Upper',
       'duration': '40 min',
       'status': 'Completed',
@@ -382,40 +394,76 @@ class _WeeklyViewState extends State<_WeeklyView> {
     },
     {
       'day': 'FRI',
-      'date': 19,
       'workout': 'Lower',
       'duration': '40 min',
       'status': 'Completed',
       'habits': ['💇 Hair Care', '🧘 Meditation'],
     },
+    {
+      'day': 'SAT',
+      'workout': 'Core',
+      'duration': '20 min',
+      'status': 'Completed',
+      'habits': ['💧 Drink Water'],
+    },
+    {
+      'day': 'SUN',
+      'workout': 'Rest',
+      'duration': '',
+      'status': 'Rest Day',
+      'habits': [],
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
+    // Calculate week end date
+    final weekEnd = _currentWeekStart.add(const Duration(days: 6));
+    final headerText =
+        '${DateFormat('MMM d').format(_currentWeekStart)} - ${DateFormat('MMM d').format(weekEnd)}';
+
     return Column(
       children: [
-        // Week Range Header
+        // Week Range Header with Navigation
         Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            'Oct 15 - Oct 21', // Only week dates, no 'Week of'
-            style: Theme.of(context).textTheme.titleLarge, // Match Daily/Monthly view style
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.chevron_left, color: AppTheme.textMuted),
+                onPressed: () => _changeWeek(-1),
+              ),
+              Text(headerText, style: Theme.of(context).textTheme.titleLarge),
+              IconButton(
+                icon: const Icon(
+                  Icons.chevron_right,
+                  color: AppTheme.textMuted,
+                ),
+                onPressed: () => _changeWeek(1),
+              ),
+            ],
           ),
         ),
 
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: _weekData.length,
+            itemCount: 7, // Always 7 days
             itemBuilder: (context, index) {
-              final day = _weekData[index];
+              // Calculate actual date for this row
+              final date = _currentWeekStart.add(Duration(days: index));
+              // Cycle through sample schedule for demo purposes
+              final scheduleIndex = index % _sampleWeekSchedule.length;
+              final schedule = _sampleWeekSchedule[scheduleIndex];
+
               return _WeeklyDayCard(
-                day: day['day'],
-                date: day['date'],
-                workout: day['workout'],
-                duration: day['duration'],
-                status: day['status'],
-                habits: List<String>.from(day['habits']),
+                day: DateFormat('EEE').format(date).toUpperCase(),
+                date: date.day,
+                workout: schedule['workout'],
+                duration: schedule['duration'],
+                status: schedule['status'],
+                habits: List<String>.from(schedule['habits']),
               );
             },
           ),
@@ -447,7 +495,7 @@ class _WeeklyDayCard extends StatelessWidget {
     final bool isRestDay = status == 'Rest Day';
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12), // Make compact
+      margin: const EdgeInsets.only(bottom: 12),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -484,10 +532,7 @@ class _WeeklyDayCard extends StatelessWidget {
                   ),
                   // Vertical line
                   Expanded(
-                    child: Container(
-                      width: 2,
-                      color: AppTheme.surfaceLight,
-                    ),
+                    child: Container(width: 2, color: AppTheme.surfaceLight),
                   ),
                 ],
               ),
@@ -509,7 +554,6 @@ class _WeeklyDayCard extends StatelessWidget {
                       border: Border.all(
                         color: isRestDay ? AppTheme.textMuted : AppTheme.accent,
                         width: 1.5,
-                        style: isRestDay ? BorderStyle.solid : BorderStyle.solid,
                       ),
                     ),
                     child: Row(
@@ -524,7 +568,9 @@ class _WeeklyDayCard extends StatelessWidget {
                           ),
                           child: Icon(
                             isRestDay ? Icons.spa : Icons.fitness_center,
-                            color: isRestDay ? AppTheme.textMuted : AppTheme.accent,
+                            color: isRestDay
+                                ? AppTheme.textMuted
+                                : AppTheme.accent,
                             size: 24,
                           ),
                         ),
@@ -535,14 +581,13 @@ class _WeeklyDayCard extends StatelessWidget {
                             children: [
                               Text(
                                 workout,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w600),
                               ),
                               if (duration.isNotEmpty) ...[
                                 const SizedBox(height: 4),
                                 Text(
-                                  duration, // Remove 'Completed'
+                                  duration,
                                   style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(color: AppTheme.accent),
                                 ),
@@ -584,8 +629,10 @@ class _WeeklyDayCard extends StatelessWidget {
                         // Extract icon and text from habit string
                         final parts = habit.split(' ');
                         final icon = parts.isNotEmpty ? parts[0] : '';
-                        final text = parts.length > 1 ? parts.sublist(1).join(' ') : '';
-                        
+                        final text = parts.length > 1
+                            ? parts.sublist(1).join(' ')
+                            : '';
+
                         return Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
@@ -602,10 +649,7 @@ class _WeeklyDayCard extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                icon,
-                                style: const TextStyle(fontSize: 16),
-                              ),
+                              Text(icon, style: const TextStyle(fontSize: 16)),
                               if (text.isNotEmpty) ...[
                                 const SizedBox(width: 6),
                                 Text(
@@ -764,32 +808,32 @@ class _CalendarGrid extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       hasWorkout
-                        ? Container(
-                            width: 28,
-                            height: 28,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppTheme.accent,
-                                width: 2,
+                          ? Container(
+                              width: 28,
+                              height: 28,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppTheme.accent,
+                                  width: 2,
+                                ),
                               ),
-                            ),
-                            child: Text(
+                              child: Text(
+                                '$day',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppTheme.accent,
+                                    ),
+                              ),
+                            )
+                          : Text(
                               '$day',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.accent,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
-                          )
-                        : Text(
-                            '$day',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                       if (habits.isNotEmpty) ...[
                         const SizedBox(height: 2),
                         Wrap(

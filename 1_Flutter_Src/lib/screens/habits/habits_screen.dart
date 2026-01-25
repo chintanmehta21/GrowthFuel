@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:growth_fuel/config/theme.dart';
 import 'package:growth_fuel/screens/habits/add_habit_screen.dart';
+import 'package:growth_fuel/screens/habits/habit_type_widgets.dart';
 import 'package:intl/intl.dart';
 
 class HabitsScreen extends StatefulWidget {
@@ -92,9 +93,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          DateFormat(
-                            'EEEE, MMM d',
-                          ).format(_selectedDate).toUpperCase(),
+                          DateFormat('EEEE, MMM d').format(_selectedDate),
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(fontWeight: FontWeight.w600),
                         ),
@@ -124,7 +123,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                     title: 'Reading',
                     isCompleted: false,
                   ),
-                  _DurationalHabitCard(
+                  DurationalHabitCard(
                     icon: '🧘',
                     title: 'Meditation',
                     isCompleted: true,
@@ -235,55 +234,6 @@ class _ReadHabitCardState extends State<_ReadHabitCard> {
                 ),
               ),
             ),
-        ],
-      ),
-    );
-  }
-}
-
-// Durational Habit Card
-class _DurationalHabitCard extends StatelessWidget {
-  final String icon;
-  final String title;
-  final bool isCompleted;
-
-  const _DurationalHabitCard({
-    required this.icon,
-    required this.title,
-    required this.isCompleted,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceDark,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Text(icon, style: const TextStyle(fontSize: 24)),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(title, style: Theme.of(context).textTheme.titleMedium),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.primary,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(
-                isCompleted ? Icons.pause : Icons.play_arrow,
-                color: AppTheme.backgroundDark,
-              ),
-              onPressed: () {
-                // TODO: Start/stop timer
-              },
-            ),
-          ),
         ],
       ),
     );

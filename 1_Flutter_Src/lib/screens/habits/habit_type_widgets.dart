@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:growth_fuel/config/theme.dart';
 
 class DurationalHabitCard extends StatefulWidget {
-  final String habitName;
+  final String icon;
+  final String title;
+  final bool isCompleted;
   final Duration initialDuration;
-  final void Function(Duration) onDurationChanged;
+  final void Function(Duration)? onDurationChanged;
 
   const DurationalHabitCard({
     super.key,
-    required this.habitName,
+    required this.icon,
+    required this.title,
+    required this.isCompleted,
     this.initialDuration = Duration.zero,
-    required this.onDurationChanged,
+    this.onDurationChanged,
   });
 
   @override
@@ -36,7 +41,7 @@ class _DurationalHabitCardState extends State<DurationalHabitCard> {
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
           setState(() {
             _duration += const Duration(seconds: 1);
-            widget.onDurationChanged(_duration);
+            widget.onDurationChanged?.call(_duration);
           });
         });
       }
@@ -63,47 +68,55 @@ class _DurationalHabitCardState extends State<DurationalHabitCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.habitName,
-                    style: const TextStyle(
-                      color: Color(0xFFD4C5A8),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _formatDuration(_duration),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                    ),
-                  ),
-                ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceDark,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Text(widget.icon, style: const TextStyle(fontSize: 24)),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              widget.title,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          // Timer Badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEDE0D4), // Light beige
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              _formatDuration(_duration),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            IconButton(
+          ),
+          const SizedBox(width: 12),
+          // Play/Pause Button
+          Container(
+            decoration: BoxDecoration(
+              color: AppTheme.primary,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
               icon: Icon(
                 _isRunning ? Icons.pause : Icons.play_arrow,
-                color: const Color(0xFFE85D04),
+                color: AppTheme.backgroundDark,
               ),
               onPressed: _toggleTimer,
-              tooltip: _isRunning ? 'Pause' : 'Play',
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
