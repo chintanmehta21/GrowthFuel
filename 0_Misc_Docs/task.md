@@ -8,6 +8,7 @@
 - [x] Configure app theme with specified color scheme
 
 ## Supabase Configuration
+
 - [x] Set up Supabase project structure
 - [x] Configure authentication (trigger for auto-profile creation)
 - [x] Design database schema (Exercise-Names, Habits-Names, Exercise Data, Habits Data, Daily Stats)

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:growth_fuel/config/theme.dart';
-import 'package:growth_fuel/utils/constants.dart';
+import 'dart:async';
 
 class ExerciseTab extends StatefulWidget {
   const ExerciseTab({super.key});
@@ -9,23 +9,251 @@ class ExerciseTab extends StatefulWidget {
   State<ExerciseTab> createState() => _ExerciseTabState();
 }
 
-class _ExerciseTabState extends State<ExerciseTab>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _ExerciseTabState extends State<ExerciseTab> {
+  String? _selectedWorkout;
 
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(
-      length: ExerciseCategories.all.length,
-      vsync: this,
+  Widget build(BuildContext context) {
+    if (_selectedWorkout == null) {
+      return _WorkoutSelectionScreen(
+        onWorkoutSelected: (workout) {
+          setState(() {
+            _selectedWorkout = workout;
+          });
+        },
+      );
+    }
+
+    return _ExerciseTabContent(
+      selectedWorkout: _selectedWorkout!,
+      onWorkoutComplete: () {
+        setState(() {
+          _selectedWorkout = null;
+        });
+      },
     );
   }
+}
+
+class _WorkoutSelectionScreen extends StatefulWidget {
+  final Function(String) onWorkoutSelected;
+
+  const _WorkoutSelectionScreen({required this.onWorkoutSelected});
+
+  @override
+  State<_WorkoutSelectionScreen> createState() =>
+      _WorkoutSelectionScreenState();
+}
+
+class _WorkoutSelectionScreenState extends State<_WorkoutSelectionScreen> {
+  String? _selectedWorkout;
+  
+  // Static list of workouts - no external dependencies
+  final List<String> workouts = ['Push', 'Pull', 'Legs', 'Upper', 'Lower'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundDark,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'What workout are you planning to do today?',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  height: 1.3,
+                ),
+              ),
+              const SizedBox(height: 32),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceDark,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: _selectedWorkout != null
+                        ? AppTheme.accent
+                        : AppTheme.surfaceLight,
+                    width: 1.5,
+                  ),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _selectedWorkout,
+                    hint: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                      child: Text(
+                        'Select a workout',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppTheme.textMuted,
+                        ),
+                      ),
+                    ),
+                    isExpanded: true,
+                    icon: Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Icon(
+                        Icons.expand_more,
+                        color: AppTheme.accent,
+                      ),
+                    ),
+                    dropdownColor: AppTheme.surfaceDark,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.textMain,
+                    ),
+                    items: workouts.map((workout) {
+                      return DropdownMenuItem<String>(
+                        value: workout,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          child: Text(workout),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedWorkout = value;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _selectedWorkout != null
+                      ? () {
+                    widget.onWorkoutSelected(_selectedWorkout!);
+                  }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.accent,
+                    disabledBackgroundColor:
+                    AppTheme.accent.withValues(alpha: 0.4),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Start',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppTheme.backgroundDark,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ExerciseTabContent extends StatefulWidget {
+  final String selectedWorkout;
+  final VoidCallback onWorkoutComplete;
+
+  const _ExerciseTabContent({
+    required this.selectedWorkout,
+    required this.onWorkoutComplete,
+  });
+
+  @override
+  State<_ExerciseTabContent> createState() => _ExerciseTabContentState();
+}
+
+class _ExerciseTabContentState extends State<_ExerciseTabContent> {
+  Timer? _timer;
+  int _elapsedSeconds = 0;
+  bool _isWorkoutStarted = false;
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _timer?.cancel();
     super.dispose();
+  }
+
+  void _startTimer() {
+    if (_isWorkoutStarted) return;
+    
+    setState(() {
+      _isWorkoutStarted = true;
+      _elapsedSeconds = 0;
+    });
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          _elapsedSeconds++;
+        });
+      }
+    });
+  }
+
+  void _stopTimer() {
+    if (!_isWorkoutStarted) return;
+    
+    _timer?.cancel();
+    _timer = null;
+    setState(() {
+      _isWorkoutStarted = false;
+    });
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+  }
+
+  void _finishWorkout() {
+    _stopTimer();
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppTheme.surfaceDark,
+          title: Text(
+            'Workout Complete!',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          content: Text(
+            'Duration: ${_formatTime(_elapsedSeconds)}\nWorkout: ${widget.selectedWorkout}',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                widget.onWorkoutComplete();
+              },
+              child: Text(
+                'OK',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge
+                    ?.copyWith(color: AppTheme.accent),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -38,25 +266,12 @@ class _ExerciseTabState extends State<ExerciseTab>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Workout : 16/01',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Text(
-                  '0:40',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: AppTheme.textMuted),
-                ),
-              ],
+            Text(
+              'Workout : ${widget.selectedWorkout}',
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             TextButton(
-              onPressed: () {
-                // TODO: Finish workout
-              },
+              onPressed: _isWorkoutStarted ? _finishWorkout : null,
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -66,63 +281,92 @@ class _ExerciseTabState extends State<ExerciseTab>
               ),
               child: Text(
                 'FINISH',
-                style: Theme.of(
-                  context,
-                ).textTheme.labelLarge?.copyWith(color: AppTheme.accent),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: _isWorkoutStarted ? AppTheme.accent : AppTheme.textMuted,
+                ),
               ),
             ),
           ],
         ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: Container(
-            color: AppTheme.backgroundDark,
-            child: TabBar(
-              controller: _tabController,
-              isScrollable: false,
-              indicatorColor: AppTheme.accent,
-              indicatorWeight: 2,
-              labelColor: AppTheme.primary,
-              unselectedLabelColor: AppTheme.textMuted,
-              labelStyle: Theme.of(context).textTheme.labelLarge,
-              tabs: ExerciseCategories.all.map((category) {
-                return Tab(text: category);
-              }).toList(),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: _ExerciseListView(category: widget.selectedWorkout),
             ),
           ),
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: ExerciseCategories.all.map((category) {
-          return _ExerciseCategoryView(category: category);
-        }).toList(),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceDark,
+              border: Border(
+                top: BorderSide(
+                  color: AppTheme.surfaceLight,
+                  width: 1,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _formatTime(_elapsedSeconds),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: AppTheme.accent,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _isWorkoutStarted ? null : _startTimer,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        _isWorkoutStarted ? AppTheme.textMuted : AppTheme.accent,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    _isWorkoutStarted ? 'STARTED' : 'START',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: AppTheme.backgroundDark,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _ExerciseCategoryView extends StatelessWidget {
+class _ExerciseListView extends StatelessWidget {
   final String category;
 
-  const _ExerciseCategoryView({required this.category});
+  const _ExerciseListView({required this.category});
 
   @override
   Widget build(BuildContext context) {
-    final exercises = ExerciseNames.byCategory[category] ?? [];
+    // Sample exercises - replace with actual data later
+    final exercises = ['Bench Press', 'Squats', 'Deadlifts', 'Rows'];
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: exercises.length + 1, // +1 for Add Exercise button
+      itemCount: exercises.length + 1,
       itemBuilder: (context, index) {
-        // Remove sample exercise card
         if (index == exercises.length) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: OutlinedButton(
-              onPressed: () {
-                // TODO: Add new exercise
-              },
+              onPressed: () {},
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppTheme.accent),
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -132,9 +376,10 @@ class _ExerciseCategoryView extends StatelessWidget {
               ),
               child: Text(
                 'ADD EXERCISE',
-                style: Theme.of(
-                  context,
-                ).textTheme.labelLarge?.copyWith(color: AppTheme.accent),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge
+                    ?.copyWith(color: AppTheme.accent),
               ),
             ),
           );
@@ -156,24 +401,16 @@ class _ExerciseCard extends StatefulWidget {
 
 class _ExerciseCardState extends State<_ExerciseCard> {
   bool _isExpanded = false;
-  final List<Map<String, dynamic>> _sets = [
-    {
-      'set': 1,
-      'previous': '60kg x 8',
-      'weight': '',
-      'reps': '',
-      'completed': false,
-    },
+  final List<Map<String, String>> _sets = [
+    {'set': '1', 'previous': '60kg x 8', 'completed': 'false'},
   ];
 
   void _addSet() {
     setState(() {
       _sets.add({
-        'set': _sets.length + 1,
+        'set': '${_sets.length + 1}',
         'previous': '60kg x 8',
-        'weight': '',
-        'reps': '',
-        'completed': false,
+        'completed': 'false',
       });
     });
   }
@@ -192,7 +429,6 @@ class _ExerciseCardState extends State<_ExerciseCard> {
       ),
       child: Column(
         children: [
-          // Exercise Header
           InkWell(
             onTap: () {
               setState(() {
@@ -227,15 +463,12 @@ class _ExerciseCardState extends State<_ExerciseCard> {
               ),
             ),
           ),
-
-          // Sets List (when expanded)
           if (_isExpanded) ...[
             const Divider(height: 1, color: AppTheme.surfaceLight),
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  // Header Row
                   Row(
                     children: [
                       SizedBox(
@@ -270,22 +503,18 @@ class _ExerciseCardState extends State<_ExerciseCard> {
                     ],
                   ),
                   const SizedBox(height: 12),
-
-                  // Sets
                   ..._sets.map(
                     (set) => _SetRow(
-                      setNumber: set['set'],
-                      previousWeight: set['previous'],
-                      isCompleted: set['completed'],
+                      setNumber: set['set']!,
+                      previousWeight: set['previous']!,
+                      isCompleted: set['completed'] == 'true',
                       onComplete: () {
                         setState(() {
-                          set['completed'] = !set['completed'];
+                          set['completed'] = set['completed'] == 'true' ? 'false' : 'true';
                         });
                       },
                     ),
                   ),
-
-                  // Add Set Button
                   const SizedBox(height: 12),
                   OutlinedButton(
                     onPressed: _addSet,
@@ -325,7 +554,7 @@ class _ExerciseCardState extends State<_ExerciseCard> {
 }
 
 class _SetRow extends StatelessWidget {
-  final int setNumber;
+  final String setNumber;
   final String previousWeight;
   final bool isCompleted;
   final VoidCallback onComplete;
@@ -346,7 +575,7 @@ class _SetRow extends StatelessWidget {
           SizedBox(
             width: 40,
             child: Text(
-              '$setNumber',
+              setNumber,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),

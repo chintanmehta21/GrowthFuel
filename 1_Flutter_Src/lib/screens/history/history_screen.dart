@@ -50,10 +50,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       appBar: AppBar(
         backgroundColor: AppTheme.backgroundDark,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.textMain),
-          onPressed: () {},
-        ),
+        leading: null,
         title: Text(
           'History',
           style: Theme.of(context).textTheme.headlineMedium,
