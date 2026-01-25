@@ -7,11 +7,11 @@ class DurationalHabitCard extends StatefulWidget {
   final void Function(Duration) onDurationChanged;
 
   const DurationalHabitCard({
-    Key? key,
+    super.key,
     required this.habitName,
     this.initialDuration = Duration.zero,
     required this.onDurationChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<DurationalHabitCard> createState() => _DurationalHabitCardState();
@@ -95,7 +95,10 @@ class _DurationalHabitCardState extends State<DurationalHabitCard> {
               ),
             ),
             IconButton(
-              icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow, color: const Color(0xFFE85D04)),
+              icon: Icon(
+                _isRunning ? Icons.pause : Icons.play_arrow,
+                color: const Color(0xFFE85D04),
+              ),
               onPressed: _toggleTimer,
               tooltip: _isRunning ? 'Pause' : 'Play',
             ),

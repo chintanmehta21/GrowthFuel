@@ -5,10 +5,10 @@ class TimePeriodDropdown extends StatefulWidget {
   final String initialValue;
 
   const TimePeriodDropdown({
-    Key? key,
+    super.key,
     required this.onChanged,
     this.initialValue = 'Weekly',
-  }) : super(key: key);
+  });
 
   @override
   State<TimePeriodDropdown> createState() => _TimePeriodDropdownState();
@@ -29,10 +29,7 @@ class _TimePeriodDropdownState extends State<TimePeriodDropdown> {
       decoration: BoxDecoration(
         color: const Color(0xFF2C2C2C),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-          color: const Color(0xFF3C3C3C),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFF3C3C3C), width: 1),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: DropdownButton<String>(
@@ -45,8 +42,9 @@ class _TimePeriodDropdownState extends State<TimePeriodDropdown> {
             widget.onChanged(newValue);
           }
         },
-        items: ['Weekly', 'Monthly', 'Custom']
-            .map<DropdownMenuItem<String>>((String value) {
+        items: ['Weekly', 'Monthly', 'Custom'].map<DropdownMenuItem<String>>((
+          String value,
+        ) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(
@@ -77,4 +75,3 @@ class _TimePeriodDropdownState extends State<TimePeriodDropdown> {
     );
   }
 }
-

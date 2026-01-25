@@ -8,13 +8,13 @@ class ScoreCard extends StatelessWidget {
   final String tooltipText;
 
   const ScoreCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.score,
     required this.iconColor,
     this.tooltipText = 'How is it calculated?',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

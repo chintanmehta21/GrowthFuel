@@ -47,7 +47,7 @@ class _WorkoutSelectionScreen extends StatefulWidget {
 
 class _WorkoutSelectionScreenState extends State<_WorkoutSelectionScreen> {
   String? _selectedWorkout;
-  
+
   // Static list of workouts - no external dependencies
   final List<String> workouts = ['Push', 'Pull', 'Legs', 'Upper', 'Lower'];
 
@@ -98,15 +98,12 @@ class _WorkoutSelectionScreenState extends State<_WorkoutSelectionScreen> {
                     isExpanded: true,
                     icon: Padding(
                       padding: const EdgeInsets.only(right: 16),
-                      child: Icon(
-                        Icons.expand_more,
-                        color: AppTheme.accent,
-                      ),
+                      child: Icon(Icons.expand_more, color: AppTheme.accent),
                     ),
                     dropdownColor: AppTheme.surfaceDark,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppTheme.textMain,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: AppTheme.textMain),
                     items: workouts.map((workout) {
                       return DropdownMenuItem<String>(
                         value: workout,
@@ -133,13 +130,14 @@ class _WorkoutSelectionScreenState extends State<_WorkoutSelectionScreen> {
                 child: ElevatedButton(
                   onPressed: _selectedWorkout != null
                       ? () {
-                    widget.onWorkoutSelected(_selectedWorkout!);
-                  }
+                          widget.onWorkoutSelected(_selectedWorkout!);
+                        }
                       : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.accent,
-                    disabledBackgroundColor:
-                    AppTheme.accent.withValues(alpha: 0.4),
+                    disabledBackgroundColor: AppTheme.accent.withValues(
+                      alpha: 0.4,
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -179,7 +177,12 @@ class _ExerciseTabContent extends StatefulWidget {
 class _ExerciseTabContentState extends State<_ExerciseTabContent> {
   Timer? _timer;
   int _elapsedSeconds = 0;
-  bool _isWorkoutStarted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
 
   @override
   void dispose() {
@@ -188,29 +191,12 @@ class _ExerciseTabContentState extends State<_ExerciseTabContent> {
   }
 
   void _startTimer() {
-    if (_isWorkoutStarted) return;
-    
-    setState(() {
-      _isWorkoutStarted = true;
-      _elapsedSeconds = 0;
-    });
-
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() {
           _elapsedSeconds++;
         });
       }
-    });
-  }
-
-  void _stopTimer() {
-    if (!_isWorkoutStarted) return;
-    
-    _timer?.cancel();
-    _timer = null;
-    setState(() {
-      _isWorkoutStarted = false;
     });
   }
 
@@ -221,8 +207,8 @@ class _ExerciseTabContentState extends State<_ExerciseTabContent> {
   }
 
   void _finishWorkout() {
-    _stopTimer();
-    
+    _timer?.cancel();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -239,15 +225,30 @@ class _ExerciseTabContentState extends State<_ExerciseTabContent> {
           actions: [
             TextButton(
               onPressed: () {
+                Navigator.pop(context); // Close dialog
+                // Resume timer if they don't finish?
+                // The old logic stopped timer.
+                // If they cancel dialog, we might want to resume.
+                // For now, let's restart it if they cancel.
+                _startTimer();
+              },
+              child: Text(
+                'CANCEL',
+                style: Theme.of(
+                  context,
+                ).textTheme.labelLarge?.copyWith(color: AppTheme.textMuted),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
                 Navigator.pop(context);
                 widget.onWorkoutComplete();
               },
               child: Text(
-                'OK',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelLarge
-                    ?.copyWith(color: AppTheme.accent),
+                'FINISH',
+                style: Theme.of(
+                  context,
+                ).textTheme.labelLarge?.copyWith(color: AppTheme.accent),
               ),
             ),
           ],
@@ -260,89 +261,71 @@ class _ExerciseTabContentState extends State<_ExerciseTabContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
-      appBar: AppBar(
-        backgroundColor: AppTheme.backgroundDark,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SafeArea(
+        child: Column(
           children: [
-            Text(
-              'Workout : ${widget.selectedWorkout}',
-              style: Theme.of(context).textTheme.titleLarge,
+            // Custom Header with Top Padding
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Workout : ${widget.selectedWorkout}',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  ElevatedButton(
+                    onPressed: _finishWorkout,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.accent,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 6, // Reduced vertical padding
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      'FINISH',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: AppTheme.backgroundDark,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            TextButton(
-              onPressed: _isWorkoutStarted ? _finishWorkout : null,
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
+
+            // Timer moved to top, smaller and closer to header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                24,
+                4,
+                24,
+                16,
+              ), // Reduced top padding
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _formatTime(_elapsedSeconds),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    // Smaller font
+                    color: AppTheme.accent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20, // Slightly smaller than titleLarge default
+                  ),
                 ),
-                backgroundColor: Colors.transparent,
               ),
-              child: Text(
-                'FINISH',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: _isWorkoutStarted ? AppTheme.accent : AppTheme.textMuted,
-                ),
-              ),
+            ),
+
+            // Exercise List
+            Expanded(
+              child: _ExerciseListView(category: widget.selectedWorkout),
             ),
           ],
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: _ExerciseListView(category: widget.selectedWorkout),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppTheme.surfaceDark,
-              border: Border(
-                top: BorderSide(
-                  color: AppTheme.surfaceLight,
-                  width: 1,
-                ),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _formatTime(_elapsedSeconds),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: AppTheme.accent,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: _isWorkoutStarted ? null : _startTimer,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        _isWorkoutStarted ? AppTheme.textMuted : AppTheme.accent,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    _isWorkoutStarted ? 'STARTED' : 'START',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: AppTheme.backgroundDark,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -376,10 +359,9 @@ class _ExerciseListView extends StatelessWidget {
               ),
               child: Text(
                 'ADD EXERCISE',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelLarge
-                    ?.copyWith(color: AppTheme.accent),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelLarge?.copyWith(color: AppTheme.accent),
               ),
             ),
           );
@@ -407,11 +389,17 @@ class _ExerciseCardState extends State<_ExerciseCard> {
 
   void _addSet() {
     setState(() {
-      _sets.add({
-        'set': '${_sets.length + 1}',
-        'previous': '60kg x 8',
-        'completed': 'false',
-      });
+      _sets.add({'set': '${_sets.length + 1}', 'previous': '60kg x 8'});
+    });
+  }
+
+  void _removeSet(int index) {
+    setState(() {
+      _sets.removeAt(index);
+      // Re-number sets
+      for (int i = 0; i < _sets.length; i++) {
+        _sets[i]['set'] = '${i + 1}';
+      }
     });
   }
 
@@ -503,16 +491,11 @@ class _ExerciseCardState extends State<_ExerciseCard> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  ..._sets.map(
-                    (set) => _SetRow(
-                      setNumber: set['set']!,
-                      previousWeight: set['previous']!,
-                      isCompleted: set['completed'] == 'true',
-                      onComplete: () {
-                        setState(() {
-                          set['completed'] = set['completed'] == 'true' ? 'false' : 'true';
-                        });
-                      },
+                  ..._sets.asMap().entries.map(
+                    (entry) => _SetRow(
+                      setNumber: entry.value['set']!,
+                      previousWeight: entry.value['previous']!,
+                      onDelete: () => _removeSet(entry.key),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -556,14 +539,12 @@ class _ExerciseCardState extends State<_ExerciseCard> {
 class _SetRow extends StatelessWidget {
   final String setNumber;
   final String previousWeight;
-  final bool isCompleted;
-  final VoidCallback onComplete;
+  final VoidCallback onDelete;
 
   const _SetRow({
     required this.setNumber,
     required this.previousWeight,
-    required this.isCompleted,
-    required this.onComplete,
+    required this.onDelete,
   });
 
   @override
@@ -618,25 +599,17 @@ class _SetRow extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           InkWell(
-            onTap: onComplete,
+            onTap: onDelete,
+            borderRadius: BorderRadius.circular(6),
             child: Container(
               width: 28,
               height: 28,
-              decoration: BoxDecoration(
-                color: isCompleted ? AppTheme.accent : Colors.transparent,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: isCompleted ? AppTheme.accent : AppTheme.textMuted,
-                  width: 2,
-                ),
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.delete_outline,
+                color: AppTheme.textMuted,
+                size: 20,
               ),
-              child: isCompleted
-                  ? const Icon(
-                      Icons.check,
-                      color: AppTheme.backgroundDark,
-                      size: 16,
-                    )
-                  : null,
             ),
           ),
         ],

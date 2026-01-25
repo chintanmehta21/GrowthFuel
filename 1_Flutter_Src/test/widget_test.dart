@@ -6,8 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ScoreCard Widget Tests', () {
-    testWidgets('ScoreCard displays title, score, and pts label correctly',
-        (WidgetTester tester) async {
+    testWidgets('ScoreCard displays title, score, and pts label correctly', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -23,7 +24,9 @@ void main() {
       expect(find.text('ScoreCard Test'), findsOneWidget);
     });
 
-    testWidgets('ScoreCard info button is present', (WidgetTester tester) async {
+    testWidgets('ScoreCard info button is present', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -39,10 +42,7 @@ void main() {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Habit Score'),
-                        Text('92 pts'),
-                      ],
+                      children: [Text('Habit Score'), Text('92 pts')],
                     ),
                   ),
                   Positioned(
@@ -83,8 +83,9 @@ void main() {
       expect(find.byType(Container), findsOneWidget);
     });
 
-    testWidgets('ScoreCard title can wrap to multiple lines',
-        (WidgetTester tester) async {
+    testWidgets('ScoreCard title can wrap to multiple lines', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -103,8 +104,9 @@ void main() {
       expect(find.text('Workout Score'), findsOneWidget);
     });
 
-    testWidgets('ScoreCard colors match design system',
-        (WidgetTester tester) async {
+    testWidgets('ScoreCard colors match design system', (
+      WidgetTester tester,
+    ) async {
       const beigeColor = Color(0xFFD4C5A8);
       const greyColor = Color(0xFF888888);
 
@@ -113,10 +115,7 @@ void main() {
           home: Scaffold(
             body: Container(
               color: beigeColor,
-              child: const Text(
-                '85 pts',
-                style: TextStyle(color: greyColor),
-              ),
+              child: const Text('85 pts', style: TextStyle(color: greyColor)),
             ),
           ),
         ),
@@ -127,8 +126,9 @@ void main() {
   });
 
   group('TimePeriodDropdown Widget Tests', () {
-    testWidgets('TimePeriodDropdown displays default value',
-        (WidgetTester tester) async {
+    testWidgets('TimePeriodDropdown displays default value', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -147,8 +147,9 @@ void main() {
       expect(find.text('Weekly'), findsOneWidget);
     });
 
-    testWidgets('TimePeriodDropdown has compact styling',
-        (WidgetTester tester) async {
+    testWidgets('TimePeriodDropdown has compact styling', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -156,10 +157,7 @@ void main() {
               decoration: BoxDecoration(
                 color: const Color(0xFF2C2C2C),
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: const Color(0xFF3C3C3C),
-                  width: 1,
-                ),
+                border: Border.all(color: const Color(0xFF3C3C3C), width: 1),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: const Row(
@@ -179,8 +177,9 @@ void main() {
       expect(find.text('Weekly'), findsOneWidget);
     });
 
-    testWidgets('TimePeriodDropdown has correct container styling',
-        (WidgetTester tester) async {
+    testWidgets('TimePeriodDropdown has correct container styling', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -201,8 +200,9 @@ void main() {
   });
 
   group('SectionWithDropdown Widget Tests', () {
-    testWidgets('SectionWithDropdown displays title',
-        (WidgetTester tester) async {
+    testWidgets('SectionWithDropdown displays title', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -215,23 +215,16 @@ void main() {
                       padding: const EdgeInsets.only(right: 80.0),
                       child: Text(
                         'Workout Counts',
-                        style: Theme.of(tester.element(find.byType(Scaffold)))
-                            .textTheme
-                            .headlineSmall,
+                        style: Theme.of(
+                          tester.element(find.byType(Scaffold)),
+                        ).textTheme.headlineSmall,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Container(
-                      height: 200,
-                      color: const Color(0xFF2C2C2C),
-                    ),
+                    Container(height: 200, color: const Color(0xFF2C2C2C)),
                   ],
                 ),
-                const Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Text('Weekly'),
-                ),
+                const Positioned(top: 0, right: 0, child: Text('Weekly')),
               ],
             ),
           ),
@@ -242,21 +235,16 @@ void main() {
       expect(find.text('Weekly'), findsOneWidget);
     });
 
-    testWidgets('SectionWithDropdown uses Stack layout',
-        (WidgetTester tester) async {
+    testWidgets('SectionWithDropdown uses Stack layout', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Stack(
               children: [
-                const Column(
-                  children: [Text('Title')],
-                ),
-                const Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Text('Dropdown'),
-                ),
+                const Column(children: [Text('Title')]),
+                const Positioned(top: 0, right: 0, child: Text('Dropdown')),
               ],
             ),
           ),
@@ -267,8 +255,9 @@ void main() {
       expect(find.byType(Positioned), findsOneWidget);
     });
 
-    testWidgets('SectionWithDropdown has proper spacing',
-        (WidgetTester tester) async {
+    testWidgets('SectionWithDropdown has proper spacing', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -276,10 +265,7 @@ void main() {
               children: [
                 const Text('Section Title'),
                 const SizedBox(height: 12),
-                Container(
-                  height: 200,
-                  color: Colors.grey,
-                ),
+                Container(height: 200, color: Colors.grey),
               ],
             ),
           ),
@@ -293,16 +279,13 @@ void main() {
   });
 
   group('Home Screen Layout Tests', () {
-    testWidgets('Home Screen displays greeting text',
-        (WidgetTester tester) async {
+    testWidgets('Home Screen displays greeting text', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ListView(
-              children: const [
-                Text('Hello Chintan Mehta,'),
-              ],
-            ),
+            body: ListView(children: const [Text('Hello Chintan Mehta,')]),
           ),
         ),
       );
@@ -310,8 +293,9 @@ void main() {
       expect(find.text('Hello Chintan Mehta,'), findsOneWidget);
     });
 
-    testWidgets('Home Screen has no profile icon in header',
-        (WidgetTester tester) async {
+    testWidgets('Home Screen has no profile icon in header', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -335,8 +319,9 @@ void main() {
       expect(find.byType(CircleAvatar), findsNothing);
     });
 
-    testWidgets('Home Screen contains section titles',
-        (WidgetTester tester) async {
+    testWidgets('Home Screen contains section titles', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -355,8 +340,9 @@ void main() {
       expect(find.text('Calories Burned'), findsOneWidget);
     });
 
-    testWidgets('Home Screen has proper spacing between sections',
-        (WidgetTester tester) async {
+    testWidgets('Home Screen has proper spacing between sections', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -377,17 +363,15 @@ void main() {
   });
 
   group('Color Scheme Tests', () {
-    testWidgets('Beige color (#D4C5A8) is used for primary text',
-        (WidgetTester tester) async {
+    testWidgets('Beige color (#D4C5A8) is used for primary text', (
+      WidgetTester tester,
+    ) async {
       const beigeColor = Color(0xFFD4C5A8);
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: Text(
-              '85 pts',
-              style: const TextStyle(color: beigeColor),
-            ),
+            body: Text('85 pts', style: const TextStyle(color: beigeColor)),
           ),
         ),
       );
@@ -395,8 +379,9 @@ void main() {
       expect(find.text('85 pts'), findsOneWidget);
     });
 
-    testWidgets('Grey color (#888888) is used for secondary text',
-        (WidgetTester tester) async {
+    testWidgets('Grey color (#888888) is used for secondary text', (
+      WidgetTester tester,
+    ) async {
       const greyColor = Color(0xFF888888);
 
       await tester.pumpWidget(
@@ -413,15 +398,14 @@ void main() {
       expect(find.text('Workout Score'), findsOneWidget);
     });
 
-    testWidgets('Dark background (#1E1E1E) is used for cards',
-        (WidgetTester tester) async {
+    testWidgets('Dark background (#1E1E1E) is used for cards', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFF1E1E1E),
-              ),
+              decoration: const BoxDecoration(color: Color(0xFF1E1E1E)),
               child: const Text('Card Content'),
             ),
           ),
@@ -433,8 +417,9 @@ void main() {
   });
 
   group('Responsive Layout Tests', () {
-    testWidgets('ScoreCard displays correctly in narrow width',
-        (WidgetTester tester) async {
+    testWidgets('ScoreCard displays correctly in narrow width', (
+      WidgetTester tester,
+    ) async {
       tester.binding.window.physicalSizeTestValue = const Size(300, 600);
 
       await tester.pumpWidget(
@@ -458,8 +443,9 @@ void main() {
       expect(find.byType(Container), findsOneWidget);
     });
 
-    testWidgets('Text wrapping works in constrained width',
-        (WidgetTester tester) async {
+    testWidgets('Text wrapping works in constrained width', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -480,22 +466,16 @@ void main() {
   });
 
   group('Widget Structure Tests', () {
-    testWidgets('Stack widget is used for complex layouts',
-        (WidgetTester tester) async {
+    testWidgets('Stack widget is used for complex layouts', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Stack(
               children: const [
-                Positioned(
-                  top: 0,
-                  child: Text('Title'),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Icon(Icons.settings),
-                ),
+                Positioned(top: 0, child: Text('Title')),
+                Positioned(top: 0, right: 0, child: Icon(Icons.settings)),
               ],
             ),
           ),
@@ -506,8 +486,9 @@ void main() {
       expect(find.byType(Positioned), findsWidgets);
     });
 
-    testWidgets('Row and Column layouts are properly used',
-        (WidgetTester tester) async {
+    testWidgets('Row and Column layouts are properly used', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -542,13 +523,13 @@ class ScoreCard extends StatelessWidget {
   final String tooltipText;
 
   const ScoreCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.score,
     required this.iconColor,
     this.tooltipText = 'How is it calculated?',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => const SizedBox();
@@ -559,10 +540,10 @@ class TimePeriodDropdown extends StatefulWidget {
   final String initialValue;
 
   const TimePeriodDropdown({
-    Key? key,
+    super.key,
     required this.onChanged,
     this.initialValue = 'Weekly',
-  }) : super(key: key);
+  });
 
   @override
   State<TimePeriodDropdown> createState() => _TimePeriodDropdownState();
@@ -588,18 +569,20 @@ class SectionWithDropdown extends StatelessWidget {
   final String initialTimePeriod;
 
   const SectionWithDropdown({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
     this.onTimePeriodChanged,
     this.initialTimePeriod = 'Weekly',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => const SizedBox();
 }
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) => const SizedBox();
 }

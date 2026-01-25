@@ -8,12 +8,12 @@ class SectionWithDropdown extends StatelessWidget {
   final String initialTimePeriod;
 
   const SectionWithDropdown({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
     this.onTimePeriodChanged,
     this.initialTimePeriod = 'Weekly',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

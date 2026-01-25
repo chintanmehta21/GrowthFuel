@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:growth_fuel/config/theme.dart';
 import 'package:growth_fuel/screens/habits/add_habit_screen.dart';
 import 'package:intl/intl.dart';
-import 'habit_type_widgets.dart';
 
 class HabitsScreen extends StatefulWidget {
   const HabitsScreen({super.key});
