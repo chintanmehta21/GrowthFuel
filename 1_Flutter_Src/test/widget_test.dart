@@ -420,7 +420,8 @@ void main() {
     testWidgets('ScoreCard displays correctly in narrow width', (
       WidgetTester tester,
     ) async {
-      tester.binding.window.physicalSizeTestValue = const Size(300, 600);
+      tester.view.physicalSize = const Size(300, 600);
+      addTearDown(tester.view.resetPhysicalSize);
 
       await tester.pumpWidget(
         MaterialApp(
@@ -550,12 +551,9 @@ class TimePeriodDropdown extends StatefulWidget {
 }
 
 class _TimePeriodDropdownState extends State<TimePeriodDropdown> {
-  late String _selectedValue;
-
   @override
   void initState() {
     super.initState();
-    _selectedValue = widget.initialValue;
   }
 
   @override

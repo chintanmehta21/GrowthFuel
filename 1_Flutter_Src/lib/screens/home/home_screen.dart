@@ -11,7 +11,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Supabase.instance.client.auth.currentUser;
-    final userName = user?.userMetadata?['name'] ?? user?.email?.split('@').first ?? 'User';
+    final userName =
+        user?.userMetadata?['name'] ?? user?.email?.split('@').first ?? 'User';
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
@@ -89,7 +90,15 @@ class HomeScreen extends StatelessWidget {
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (value, meta) {
-                                const titles = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                                const titles = [
+                                  'Mon',
+                                  'Tue',
+                                  'Wed',
+                                  'Thu',
+                                  'Fri',
+                                  'Sat',
+                                  'Sun',
+                                ];
                                 return Text(
                                   titles[value.toInt()],
                                   style: const TextStyle(
@@ -100,20 +109,117 @@ class HomeScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
                         ),
                         gridData: FlGridData(show: false),
                         borderData: FlBorderData(show: false),
                         barGroups: [
-                          BarChartGroupData(x: 0, barRods: [BarChartRodData(toY: 5, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
-                          BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 6, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
-                          BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 3, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
-                          BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 7, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
-                          BarChartGroupData(x: 4, barRods: [BarChartRodData(toY: 4, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
-                          BarChartGroupData(x: 5, barRods: [BarChartRodData(toY: 8, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
-                          BarChartGroupData(x: 6, barRods: [BarChartRodData(toY: 5, color: const Color(0xFFD4C5A8), width: 12, borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)))]),
+                          BarChartGroupData(
+                            x: 0,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 5,
+                                color: const Color(0xFFD4C5A8),
+                                width: 12,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          BarChartGroupData(
+                            x: 1,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 6,
+                                color: const Color(0xFFD4C5A8),
+                                width: 12,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          BarChartGroupData(
+                            x: 2,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 3,
+                                color: const Color(0xFFD4C5A8),
+                                width: 12,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          BarChartGroupData(
+                            x: 3,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 7,
+                                color: const Color(0xFFD4C5A8),
+                                width: 12,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          BarChartGroupData(
+                            x: 4,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 4,
+                                color: const Color(0xFFD4C5A8),
+                                width: 12,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          BarChartGroupData(
+                            x: 5,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 8,
+                                color: const Color(0xFFD4C5A8),
+                                width: 12,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          BarChartGroupData(
+                            x: 6,
+                            barRods: [
+                              BarChartRodData(
+                                toY: 5,
+                                color: const Color(0xFFD4C5A8),
+                                width: 12,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -147,7 +253,15 @@ class HomeScreen extends StatelessWidget {
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (value, meta) {
-                                const titles = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                                const titles = [
+                                  'Mon',
+                                  'Tue',
+                                  'Wed',
+                                  'Thu',
+                                  'Fri',
+                                  'Sat',
+                                  'Sun',
+                                ];
                                 return Text(
                                   titles[value.toInt()],
                                   style: const TextStyle(
@@ -158,9 +272,15 @@ class HomeScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
                         ),
                         borderData: FlBorderData(show: false),
                         lineBarsData: [
@@ -181,7 +301,9 @@ class HomeScreen extends StatelessWidget {
                             dotData: FlDotData(show: false),
                             belowBarData: BarAreaData(
                               show: true,
-                              color: const Color(0xFFD4C5A8).withOpacity(0.1),
+                              color: const Color(
+                                0xFFD4C5A8,
+                              ).withValues(alpha: 0.1),
                             ),
                           ),
                         ],

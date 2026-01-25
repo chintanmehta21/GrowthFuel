@@ -21,7 +21,10 @@ class ProfileScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.accent,
                 foregroundColor: AppTheme.backgroundDark,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
               ),
               onPressed: () async {
                 await Supabase.instance.client.auth.signInWithOAuth(
@@ -60,7 +63,9 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 user.email ?? '',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
               ),
               const SizedBox(height: 32),
 
@@ -125,6 +130,7 @@ class ProfileScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () async {
                       await Supabase.instance.client.auth.signOut();
+                      if (!context.mounted) return;
                       Navigator.of(context).pushReplacementNamed('/login');
                     },
                     style: ElevatedButton.styleFrom(

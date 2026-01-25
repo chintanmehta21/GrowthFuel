@@ -11,7 +11,7 @@ class AddHabitScreen extends StatefulWidget {
 
 class _AddHabitScreenState extends State<AddHabitScreen> {
   String _selectedHabitType = HabitTypes.task;
-  String _habitName = '';
+  final TextEditingController _habitNameController = TextEditingController();
   String _category = '';
 
   @override
@@ -75,7 +75,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                                 vertical: 16,
                               ),
                             ),
-                            onChanged: (value) => _habitName = value,
+                            controller: _habitNameController,
                           ),
                         ),
                         const SizedBox(width: 12),
